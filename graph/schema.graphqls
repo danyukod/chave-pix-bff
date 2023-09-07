@@ -1,28 +1,49 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-
-type Todo {
-  id: ID!
-  text: String!
-  done: Boolean!
-  user: User!
+type PixKey {
+    id: ID!
+    pixKeyType: String!
+    pixKey: String!
+    account: Account!
 }
 
-type User {
-  id: ID!
-  name: String!
+type Account {
+    accountType: String!
+    number: Int!
+    agency: Int!
+    holder: Holder!
+}
+
+type Holder {
+    name: String!
+    lasName: String
+}
+
+input NewPixKey {
+    pixKeyType: String!
+    pixKey: String!
+    account: NewAccount!
+}
+
+input NewAccount {
+    accountType: String!
+    number: Int!
+    agency: Int!
+    holder: NewHolder!
+}
+
+input NewHolder {
+    name: String!
+    lasName: String
 }
 
 type Query {
-  todos: [Todo!]!
-}
-
-input NewTodo {
-  text: String!
-  userId: String!
+    pixKeys: [PixKey!]!
+    pixKey(id: ID!): PixKey
+    account(id: ID!): Account
+    holder(id: ID!): Holder
 }
 
 type Mutation {
-  createTodo(input: NewTodo!): Todo!
+    createPixKey(newPixKey: NewPixKey!): PixKey!
+    updatePixKey(id: ID!, newPixKey: NewPixKey!): PixKey!
+    deletePixKey(id: ID!): PixKey!
 }
