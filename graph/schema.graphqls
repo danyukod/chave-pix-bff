@@ -14,7 +14,7 @@ type Account {
 
 type Holder {
     name: String!
-    lasName: String
+    lastName: String
 }
 
 input NewPixKey {
@@ -32,7 +32,7 @@ input NewAccount {
 
 input NewHolder {
     name: String!
-    lasName: String
+    lastName: String
 }
 
 type Query {

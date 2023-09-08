@@ -10,8 +10,8 @@ type Account struct {
 }
 
 type Holder struct {
-	Name    string  `json:"name"`
-	LasName *string `json:"lasName,omitempty"`
+	Name     string  `json:"name"`
+	LastName *string `json:"lastName,omitempty"`
 }
 
 type NewAccount struct {
@@ -22,8 +22,8 @@ type NewAccount struct {
 }
 
 type NewHolder struct {
-	Name    string  `json:"name"`
-	LasName *string `json:"lasName,omitempty"`
+	Name     string  `json:"name"`
+	LastName *string `json:"lastName,omitempty"`
 }
 
 type NewPixKey struct {

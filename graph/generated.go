@@ -53,8 +53,8 @@ type ComplexityRoot struct {
 	}
 
 	Holder struct {
-		LasName func(childComplexity int) int
-		Name    func(childComplexity int) int
+		LastName func(childComplexity int) int
+		Name     func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -133,12 +133,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Account.Number(childComplexity), true
 
-	case "Holder.lasName":
-		if e.complexity.Holder.LasName == nil {
+	case "Holder.lastName":
+		if e.complexity.Holder.LastName == nil {
 			break
 		}
 
-		return e.complexity.Holder.LasName(childComplexity), true
+		return e.complexity.Holder.LastName(childComplexity), true
 
 	case "Holder.name":
 		if e.complexity.Holder.Name == nil {
@@ -706,8 +706,8 @@ func (ec *executionContext) fieldContext_Account_holder(ctx context.Context, fie
 			switch field.Name {
 			case "name":
 				return ec.fieldContext_Holder_name(ctx, field)
-			case "lasName":
-				return ec.fieldContext_Holder_lasName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_Holder_lastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Holder", field.Name)
 		},
@@ -759,8 +759,8 @@ func (ec *executionContext) fieldContext_Holder_name(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Holder_lasName(ctx context.Context, field graphql.CollectedField, obj *model.Holder) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Holder_lasName(ctx, field)
+func (ec *executionContext) _Holder_lastName(ctx context.Context, field graphql.CollectedField, obj *model.Holder) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Holder_lastName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -773,7 +773,7 @@ func (ec *executionContext) _Holder_lasName(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.LasName, nil
+		return obj.LastName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -787,7 +787,7 @@ func (ec *executionContext) _Holder_lasName(ctx context.Context, field graphql.C
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Holder_lasName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Holder_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Holder",
 		Field:      field,
@@ -1397,8 +1397,8 @@ func (ec *executionContext) fieldContext_Query_holder(ctx context.Context, field
 			switch field.Name {
 			case "name":
 				return ec.fieldContext_Holder_name(ctx, field)
-			case "lasName":
-				return ec.fieldContext_Holder_lasName(ctx, field)
+			case "lastName":
+				return ec.fieldContext_Holder_lastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Holder", field.Name)
 		},
@@ -3382,7 +3382,7 @@ func (ec *executionContext) unmarshalInputNewHolder(ctx context.Context, obj int
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "lasName"}
+	fieldsInOrder := [...]string{"name", "lastName"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3398,15 +3398,15 @@ func (ec *executionContext) unmarshalInputNewHolder(ctx context.Context, obj int
 				return it, err
 			}
 			it.Name = data
-		case "lasName":
+		case "lastName":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lasName"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastName"))
 			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.LasName = data
+			it.LastName = data
 		}
 	}
 
@@ -3538,8 +3538,8 @@ func (ec *executionContext) _Holder(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "lasName":
-			out.Values[i] = ec._Holder_lasName(ctx, field, obj)
+		case "lastName":
+			out.Values[i] = ec._Holder_lastName(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

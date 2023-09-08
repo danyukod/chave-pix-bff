@@ -7,8 +7,8 @@ package graph
 import (
 	"context"
 	"fmt"
-
 	"github.com/danyukod/chave-pix-bff/graph/model"
+	"github.com/danyukod/chave-pix-bff/internal/application/commands/dto"
 )
 
 // CreatePixKey is the resolver for the createPixKey field.
@@ -28,12 +28,50 @@ func (r *mutationResolver) DeletePixKey(ctx context.Context, id string) (*model.
 
 // PixKeys is the resolver for the pixKeys field.
 func (r *queryResolver) PixKeys(ctx context.Context) ([]*model.PixKey, error) {
-	panic(fmt.Errorf("not implemented: PixKeys - pixKeys"))
+	pixKeyDto, err := r.FindPixKeyUsecase.Execute()
+	if err != nil {
+		return nil, err
+	}
+	var response []*model.PixKey
+	for _, pixKey := range *pixKeyDto {
+		response = append(response, &model.PixKey{
+			ID:         pixKey.Id,
+			PixKeyType: pixKey.PixKeyType,
+			PixKey:     pixKey.PixKey,
+			Account: &model.Account{
+				AccountType: pixKey.AccountType,
+				Number:      pixKey.AccountNumber,
+				Agency:      pixKey.AgencyNumber,
+				Holder: &model.Holder{
+					Name:     pixKey.AccountHolderName,
+					LastName: &pixKey.AccountHolderLastName,
+				},
+			},
+		})
+	}
+	return response, nil
 }
 
 // PixKey is the resolver for the pixKey field.
 func (r *queryResolver) PixKey(ctx context.Context, id string) (*model.PixKey, error) {
-	panic(fmt.Errorf("not implemented: PixKey - pixKey"))
+	findPixKeyByKeyDTO, err := r.FindPixKeyByKeyUsecase.Execute(&dto.FindPixKeyByKeyInputDTO{Key: id})
+	if err != nil {
+		return nil, err
+	}
+	return &model.PixKey{
+		ID:         findPixKeyByKeyDTO.Id,
+		PixKeyType: findPixKeyByKeyDTO.PixKeyType,
+		PixKey:     findPixKeyByKeyDTO.PixKey,
+		Account: &model.Account{
+			AccountType: findPixKeyByKeyDTO.AccountType,
+			Number:      findPixKeyByKeyDTO.AccountNumber,
+			Agency:      findPixKeyByKeyDTO.AgencyNumber,
+			Holder: &model.Holder{
+				Name:     findPixKeyByKeyDTO.AccountHolderName,
+				LastName: &findPixKeyByKeyDTO.AccountHolderLastName,
+			},
+		},
+	}, nil
 }
 
 // Account is the resolver for the account field.
