@@ -20,19 +20,11 @@ type Holder {
 input NewPixKey {
     pixKeyType: String!
     pixKey: String!
-    account: NewAccount!
-}
-
-input NewAccount {
     accountType: String!
-    number: Int!
-    agency: Int!
-    holder: NewHolder!
-}
-
-input NewHolder {
-    name: String!
-    lastName: String
+    accountNumber: Int!
+    agencyNumber: Int!
+    holderName: String!
+    holderLastName: String
 }
 
 type Query {

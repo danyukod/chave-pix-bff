@@ -1,7 +1,9 @@
 package pix_key
 
 import (
+	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/danyukod/chave-pix-bff/internal/application/domain/model"
 	"io"
 	"net/http"
@@ -68,4 +70,39 @@ func (p *PixKeyClient) FindPixKey() ([]model.PixKeyDomainInterface, error) {
 	}
 
 	return domains, nil
+}
+
+func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) error {
+	client := &http.Client{}
+
+	body := NewPixKeyRequestDTOFromDomain(pixKey)
+
+	jsonBody, err := json.Marshal(body)
+
+	if err != nil {
+		return err
+	}
+
+	req, _ := http.NewRequest("POST", "http://localhost:8080/api/v1/pix-keys", bytes.NewBuffer(jsonBody))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTQxNDA3OTMsInN1YiI6ImZjY2JmZWFiLWIzM2QtNGRkYS1iZjhhLThjMGRjNmE4OTNjMSJ9.eVkFJXOik6efeQZ996sXXbX30O3BZ_EsEVV5M9wQX6C3agjuHubRQrqiVMh_b9xqSIF0wN8j7vFNzWmB5mezlw")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(resp.Body)
+
+	if resp.StatusCode != 201 {
+		err := errors.New("error creating pix key")
+		return err
+	}
+
+	return nil
 }

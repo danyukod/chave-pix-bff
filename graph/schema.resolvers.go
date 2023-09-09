@@ -7,13 +7,42 @@ package graph
 import (
 	"context"
 	"fmt"
+
 	"github.com/danyukod/chave-pix-bff/graph/model"
 	"github.com/danyukod/chave-pix-bff/internal/application/commands/dto"
 )
 
 // CreatePixKey is the resolver for the createPixKey field.
 func (r *mutationResolver) CreatePixKey(ctx context.Context, newPixKey model.NewPixKey) (*model.PixKey, error) {
-	panic(fmt.Errorf("not implemented: CreatePixKey - createPixKey"))
+	createPixKeyInputDTO := &dto.CreatePixKeyInputDTO{
+		PixKeyType:            newPixKey.PixKeyType,
+		PixKey:                newPixKey.PixKey,
+		AccountType:           newPixKey.AccountType,
+		AgencyNumber:          newPixKey.AgencyNumber,
+		AccountNumber:         newPixKey.AccountNumber,
+		AccountHolderName:     newPixKey.HolderName,
+		AccountHolderLastName: *newPixKey.HolderLastName,
+	}
+
+	domain, err := r.CreatePixKeyUsecase.Execute(createPixKeyInputDTO)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.PixKey{
+		ID:         domain.GetID(),
+		PixKeyType: domain.GetPixKeyType().GetType(),
+		PixKey:     domain.GetPixKey(),
+		Account: &model.Account{
+			AccountType: domain.GetAccount().GetAccountType().String(),
+			Number:      domain.GetAccount().GetNumber(),
+			Agency:      domain.GetAccount().GetAgency(),
+			Holder: &model.Holder{
+				Name:     domain.GetAccount().GetHolder().GetName(),
+				LastName: domain.GetAccount().GetHolder().GetLastName(),
+			},
+		},
+	}, nil
 }
 
 // UpdatePixKey is the resolver for the updatePixKey field.

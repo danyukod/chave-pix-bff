@@ -262,8 +262,6 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
-		ec.unmarshalInputNewAccount,
-		ec.unmarshalInputNewHolder,
 		ec.unmarshalInputNewPixKey,
 	)
 	first := true
@@ -3319,100 +3317,6 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputNewAccount(ctx context.Context, obj interface{}) (model.NewAccount, error) {
-	var it model.NewAccount
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"accountType", "number", "agency", "holder"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "accountType":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountType"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.AccountType = data
-		case "number":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("number"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Number = data
-		case "agency":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("agency"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Agency = data
-		case "holder":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("holder"))
-			data, err := ec.unmarshalNNewHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewHolder(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Holder = data
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputNewHolder(ctx context.Context, obj interface{}) (model.NewHolder, error) {
-	var it model.NewHolder
-	asMap := map[string]interface{}{}
-	for k, v := range obj.(map[string]interface{}) {
-		asMap[k] = v
-	}
-
-	fieldsInOrder := [...]string{"name", "lastName"}
-	for _, k := range fieldsInOrder {
-		v, ok := asMap[k]
-		if !ok {
-			continue
-		}
-		switch k {
-		case "name":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Name = data
-		case "lastName":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastName"))
-			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.LastName = data
-		}
-	}
-
-	return it, nil
-}
-
 func (ec *executionContext) unmarshalInputNewPixKey(ctx context.Context, obj interface{}) (model.NewPixKey, error) {
 	var it model.NewPixKey
 	asMap := map[string]interface{}{}
@@ -3420,7 +3324,7 @@ func (ec *executionContext) unmarshalInputNewPixKey(ctx context.Context, obj int
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"pixKeyType", "pixKey", "account"}
+	fieldsInOrder := [...]string{"pixKeyType", "pixKey", "accountType", "accountNumber", "agencyNumber", "holderName", "holderLastName"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3445,15 +3349,51 @@ func (ec *executionContext) unmarshalInputNewPixKey(ctx context.Context, obj int
 				return it, err
 			}
 			it.PixKey = data
-		case "account":
+		case "accountType":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("account"))
-			data, err := ec.unmarshalNNewAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewAccount(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountType"))
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.Account = data
+			it.AccountType = data
+		case "accountNumber":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("accountNumber"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AccountNumber = data
+		case "agencyNumber":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("agencyNumber"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.AgencyNumber = data
+		case "holderName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("holderName"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.HolderName = data
+		case "holderLastName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("holderLastName"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.HolderLastName = data
 		}
 	}
 
@@ -4198,16 +4138,6 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) unmarshalNNewAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewAccount(ctx context.Context, v interface{}) (*model.NewAccount, error) {
-	res, err := ec.unmarshalInputNewAccount(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNNewHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewHolder(ctx context.Context, v interface{}) (*model.NewHolder, error) {
-	res, err := ec.unmarshalInputNewHolder(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewPixKey(ctx context.Context, v interface{}) (model.NewPixKey, error) {

@@ -9,4 +9,5 @@ import "github.com/danyukod/chave-pix-bff/internal/application/port/input"
 type Resolver struct {
 	input.FindPixKeyUsecase
 	input.FindPixKeyByKeyUsecase
+	input.CreatePixKeyUsecase
 }

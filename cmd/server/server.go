@@ -23,9 +23,11 @@ func main() {
 	gateway := pix_key.NewPixKeyClient()
 	findPixKeyByKeyUsecase := commands.NewFindPixKeyByKeyUsecase(gateway)
 	findPixKeyUsecase := commands.NewFindPixKeyUsecase(gateway)
+	createPixKeyUsecase := commands.NewCreatePixKeyService(gateway)
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
 		FindPixKeyUsecase:      findPixKeyUsecase,
 		FindPixKeyByKeyUsecase: findPixKeyByKeyUsecase,
+		CreatePixKeyUsecase:    createPixKeyUsecase,
 	}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))

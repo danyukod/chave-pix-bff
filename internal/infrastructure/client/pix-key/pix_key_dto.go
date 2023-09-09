@@ -5,6 +5,28 @@ import (
 	"github.com/danyukod/chave-pix-bff/internal/application/domain/shared/aggregate"
 )
 
+type PixKeyRequestDTO struct {
+	PixKeyType            string `json:"pixKeyType"`
+	PixKey                string `json:"response"`
+	AccountType           string `json:"accountType"`
+	AccountNumber         int    `json:"accountNumber"`
+	AgencyNumber          int    `json:"agencyNumber"`
+	AccountHolderName     string `json:"accountHolderName"`
+	AccountHolderLastName string `json:"accountHolderLastName"`
+}
+
+func NewPixKeyRequestDTOFromDomain(domain model.PixKeyDomainInterface) *PixKeyRequestDTO {
+	return &PixKeyRequestDTO{
+		PixKeyType:            domain.GetPixKeyType().GetType(),
+		PixKey:                domain.GetPixKey(),
+		AccountType:           domain.GetAccount().GetAccountType().String(),
+		AccountNumber:         domain.GetAccount().GetNumber(),
+		AgencyNumber:          domain.GetAccount().GetAgency(),
+		AccountHolderName:     domain.GetAccount().GetHolder().GetName(),
+		AccountHolderLastName: domain.GetAccount().GetHolder().GetLastName(),
+	}
+}
+
 type PixKeyResponseDTO struct {
 	Id                    string `json:"id"`
 	PixKeyType            string `json:"pixKeyType"`

@@ -14,22 +14,14 @@ type Holder struct {
 	LastName *string `json:"lastName,omitempty"`
 }
 
-type NewAccount struct {
-	AccountType string     `json:"accountType"`
-	Number      int        `json:"number"`
-	Agency      int        `json:"agency"`
-	Holder      *NewHolder `json:"holder"`
-}
-
-type NewHolder struct {
-	Name     string  `json:"name"`
-	LastName *string `json:"lastName,omitempty"`
-}
-
 type NewPixKey struct {
-	PixKeyType string      `json:"pixKeyType"`
-	PixKey     string      `json:"pixKey"`
-	Account    *NewAccount `json:"account"`
+	PixKeyType     string  `json:"pixKeyType"`
+	PixKey         string  `json:"pixKey"`
+	AccountType    string  `json:"accountType"`
+	AccountNumber  int     `json:"accountNumber"`
+	AgencyNumber   int     `json:"agencyNumber"`
+	HolderName     string  `json:"holderName"`
+	HolderLastName *string `json:"holderLastName,omitempty"`
 }
 
 type PixKey struct {
