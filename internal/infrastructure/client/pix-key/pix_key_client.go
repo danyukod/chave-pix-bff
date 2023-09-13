@@ -72,7 +72,7 @@ func (p *PixKeyClient) FindPixKey() ([]model.PixKeyDomainInterface, error) {
 	return domains, nil
 }
 
-func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) error {
+func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) (model.PixKeyDomainInterface, error) {
 	client := &http.Client{}
 
 	body := NewPixKeyRequestDTOFromDomain(pixKey)
@@ -80,7 +80,7 @@ func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) error {
 	jsonBody, err := json.Marshal(body)
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	req, _ := http.NewRequest("POST", "http://localhost:8080/api/v1/pix-keys", bytes.NewBuffer(jsonBody))
@@ -89,7 +89,7 @@ func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	defer func(Body io.ReadCloser) {
@@ -101,8 +101,21 @@ func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) error {
 
 	if resp.StatusCode != 201 {
 		err := errors.New("error creating pix key")
-		return err
+		return nil, err
 	}
 
-	return nil
+	var dto PixKeyResponseDTO
+
+	err = json.NewDecoder(resp.Body).Decode(&dto)
+
+	if err != nil {
+		return nil, err
+	}
+
+	domain, err := dto.ToDomain()
+	if err != nil {
+		return nil, err
+	}
+
+	return domain, nil
 }

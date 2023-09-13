@@ -28,7 +28,7 @@ func (f *FindPixKeyByKeyService) Execute(input *dto.FindPixKeyByKeyInputDTO) (*d
 		AccountNumber:         pixKeyDomain.GetAccount().GetNumber(),
 		AgencyNumber:          pixKeyDomain.GetAccount().GetAgency(),
 		AccountHolderName:     pixKeyDomain.GetAccount().GetHolder().GetName(),
-		AccountHolderLastName: pixKeyDomain.GetAccount().GetHolder().GetLastName(),
+		AccountHolderLastName: *pixKeyDomain.GetAccount().GetHolder().GetLastName(),
 	}
 	return outputDto, nil
 }
