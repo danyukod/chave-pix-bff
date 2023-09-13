@@ -23,7 +23,7 @@ func NewPixKeyRequestDTOFromDomain(domain model.PixKeyDomainInterface) *PixKeyRe
 		AccountNumber:         domain.GetAccount().GetNumber(),
 		AgencyNumber:          domain.GetAccount().GetAgency(),
 		AccountHolderName:     domain.GetAccount().GetHolder().GetName(),
-		AccountHolderLastName: domain.GetAccount().GetHolder().GetLastName(),
+		AccountHolderLastName: *domain.GetAccount().GetHolder().GetLastName(),
 	}
 }
 
