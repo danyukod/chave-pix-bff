@@ -7,7 +7,7 @@ import (
 type HolderDomainInterface interface {
 	Validate() error
 	GetName() string
-	GetLastName() string
+	GetLastName() *string
 }
 
 func NewHolderDomain(name string, lastName string) (HolderDomainInterface, error) {
@@ -41,6 +41,6 @@ func (h *holderDomain) GetName() string {
 	return h.name
 }
 
-func (h *holderDomain) GetLastName() string {
-	return h.lastName
+func (h *holderDomain) GetLastName() *string {
+	return &h.lastName
 }

@@ -17,22 +17,22 @@ func NewCreatePixKeyService(pixKeyGateway output.PixKeyGateway) *CreatePixKeySer
 	}
 }
 
-func (s *CreatePixKeyService) Execute(input *dto.CreatePixKeyInputDTO) error {
+func (s *CreatePixKeyService) Execute(input *dto.CreatePixKeyInputDTO) (model.PixKeyDomainInterface, error) {
 
 	holderDomain, err := aggregate.NewHolderDomain(input.AccountHolderName, input.AccountHolderLastName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	accountDomain, err := aggregate.NewAccountDomain(input.AccountNumber, input.AgencyNumber, input.AccountType, holderDomain)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	pixKey, err := model.NewPixKeyDomain(input.PixKey, input.PixKeyType, accountDomain)
 
-	err = s.PixKeyGateway.CreatePixKey(pixKey)
+	pixKey, err = s.PixKeyGateway.CreatePixKey(pixKey)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return pixKey, nil
 }
