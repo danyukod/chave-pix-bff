@@ -8,13 +8,13 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"github.com/danyukod/chave-pix-bff/internal/ui/graph/model"
 	"strconv"
 	"sync"
 	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/danyukod/chave-pix-bff/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )

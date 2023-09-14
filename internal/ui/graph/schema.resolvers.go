@@ -7,8 +7,8 @@ package graph
 import (
 	"context"
 	"fmt"
-	"github.com/danyukod/chave-pix-bff/graph/model"
 	"github.com/danyukod/chave-pix-bff/internal/application/commands/dto"
+	"github.com/danyukod/chave-pix-bff/internal/ui/graph/model"
 )
 
 // CreatePixKey is the resolver for the createPixKey field.
