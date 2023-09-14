@@ -1,9 +1,9 @@
 package input
 
 import (
-	"github.com/danyukod/chave-pix-bff/internal/application/commands/dto"
+	"github.com/danyukod/chave-pix-bff/internal/application/queries/dto"
 )
 
 type FindPixKeyByKeyUsecase interface {
-	Execute(*dto.FindPixKeyByKeyInputDTO) (*dto.FindPixKeyByKeyOutputDTO, error)
+	Execute(string) (*dto.FindPixKeyQueryDTO, error)
 }

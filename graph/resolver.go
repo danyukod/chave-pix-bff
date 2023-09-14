@@ -1,6 +1,8 @@
 package graph
 
-import "github.com/danyukod/chave-pix-bff/internal/application/port/input"
+import (
+	"github.com/danyukod/chave-pix-bff/internal/application/port/input"
+)
 
 // This file will not be regenerated automatically.
 //

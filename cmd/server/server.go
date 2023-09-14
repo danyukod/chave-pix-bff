@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/danyukod/chave-pix-bff/internal/application/commands"
+	"github.com/danyukod/chave-pix-bff/internal/application/queries"
 	"github.com/danyukod/chave-pix-bff/internal/infrastructure/client/pix-key"
 	"log"
 	"net/http"
@@ -21,8 +22,8 @@ func main() {
 	}
 
 	gateway := pix_key.NewPixKeyClient()
-	findPixKeyByKeyUsecase := commands.NewFindPixKeyByKeyUsecase(gateway)
-	findPixKeyUsecase := commands.NewFindPixKeyUsecase(gateway)
+	findPixKeyByKeyUsecase := queries.NewFindPixKeyByKeyQuery(gateway)
+	findPixKeyUsecase := queries.NewFindPixKeyQuery(gateway)
 	createPixKeyUsecase := commands.NewCreatePixKeyService(gateway)
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
 		FindPixKeyUsecase:      findPixKeyUsecase,

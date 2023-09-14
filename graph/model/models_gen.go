@@ -2,18 +2,6 @@
 
 package model
 
-type Account struct {
-	AccountType string  `json:"accountType"`
-	Number      int     `json:"number"`
-	Agency      int     `json:"agency"`
-	Holder      *Holder `json:"holder"`
-}
-
-type Holder struct {
-	Name     string  `json:"name"`
-	LastName *string `json:"lastName,omitempty"`
-}
-
 type NewPixKey struct {
 	PixKeyType     string  `json:"pixKeyType"`
 	PixKey         string  `json:"pixKey"`
@@ -25,8 +13,12 @@ type NewPixKey struct {
 }
 
 type PixKey struct {
-	ID         string   `json:"id"`
-	PixKeyType string   `json:"pixKeyType"`
-	PixKey     string   `json:"pixKey"`
-	Account    *Account `json:"account"`
+	ID             string  `json:"id"`
+	PixKeyType     string  `json:"pixKeyType"`
+	PixKey         string  `json:"pixKey"`
+	AccountType    string  `json:"accountType"`
+	AccountNumber  int     `json:"accountNumber"`
+	AgencyNumber   int     `json:"agencyNumber"`
+	HolderName     string  `json:"holderName"`
+	HolderLastName *string `json:"holderLastName,omitempty"`
 }

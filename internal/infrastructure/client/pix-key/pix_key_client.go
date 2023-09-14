@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/danyukod/chave-pix-bff/internal/application/domain/model"
+	"github.com/danyukod/chave-pix-bff/internal/application/queries/dto"
 	"io"
 	"net/http"
 )
@@ -39,7 +40,7 @@ func (p *PixKeyClient) FindPixKeyByKey(key string) (model.PixKeyDomainInterface,
 	return domain, nil
 }
 
-func (p *PixKeyClient) FindPixKey() ([]model.PixKeyDomainInterface, error) {
+func (p *PixKeyClient) FindPixKey() ([]dto.FindPixKeyQueryDTO, error) {
 	client := &http.Client{}
 	req, _ := http.NewRequest("GET", "http://localhost:8080/api/v1/pix-keys", nil)
 	req.Header.Set("Content-Type", "application/json")
@@ -52,24 +53,14 @@ func (p *PixKeyClient) FindPixKey() ([]model.PixKeyDomainInterface, error) {
 	defer resp.Body.Close()
 	body, err := io.ReadAll(resp.Body)
 
-	var dto []PixKeyResponseDTO
+	var dto []dto.FindPixKeyQueryDTO
 
 	err = json.Unmarshal(body, &dto)
 	if err != nil {
 		return nil, err
 	}
 
-	var domains []model.PixKeyDomainInterface
-
-	for _, pixKeyResponseDTO := range dto {
-		domain, err := pixKeyResponseDTO.ToDomain()
-		if err != nil {
-			return nil, err
-		}
-		domains = append(domains, domain)
-	}
-
-	return domains, nil
+	return dto, nil
 }
 
 func (p *PixKeyClient) CreatePixKey(pixKey model.PixKeyDomainInterface) (model.PixKeyDomainInterface, error) {

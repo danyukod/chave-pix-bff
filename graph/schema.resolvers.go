@@ -7,7 +7,6 @@ package graph
 import (
 	"context"
 	"fmt"
-
 	"github.com/danyukod/chave-pix-bff/graph/model"
 	"github.com/danyukod/chave-pix-bff/internal/application/commands/dto"
 )
@@ -30,18 +29,14 @@ func (r *mutationResolver) CreatePixKey(ctx context.Context, newPixKey model.New
 	}
 
 	return &model.PixKey{
-		ID:         domain.GetID(),
-		PixKeyType: domain.GetPixKeyType().GetType(),
-		PixKey:     domain.GetPixKey(),
-		Account: &model.Account{
-			AccountType: domain.GetAccount().GetAccountType().String(),
-			Number:      domain.GetAccount().GetNumber(),
-			Agency:      domain.GetAccount().GetAgency(),
-			Holder: &model.Holder{
-				Name:     domain.GetAccount().GetHolder().GetName(),
-				LastName: domain.GetAccount().GetHolder().GetLastName(),
-			},
-		},
+		ID:             domain.GetID(),
+		PixKeyType:     domain.GetPixKeyType().GetType(),
+		PixKey:         domain.GetPixKey(),
+		AccountType:    domain.GetAccount().GetAccountType().String(),
+		AgencyNumber:   domain.GetAccount().GetAgency(),
+		AccountNumber:  domain.GetAccount().GetNumber(),
+		HolderName:     domain.GetAccount().GetHolder().GetName(),
+		HolderLastName: domain.GetAccount().GetHolder().GetLastName(),
 	}, nil
 }
 
@@ -64,53 +59,36 @@ func (r *queryResolver) PixKeys(ctx context.Context) ([]*model.PixKey, error) {
 	var response []*model.PixKey
 	for _, pixKey := range *pixKeyDto {
 		response = append(response, &model.PixKey{
-			ID:         pixKey.Id,
-			PixKeyType: pixKey.PixKeyType,
-			PixKey:     pixKey.PixKey,
-			Account: &model.Account{
-				AccountType: pixKey.AccountType,
-				Number:      pixKey.AccountNumber,
-				Agency:      pixKey.AgencyNumber,
-				Holder: &model.Holder{
-					Name:     pixKey.AccountHolderName,
-					LastName: &pixKey.AccountHolderLastName,
-				},
-			},
+			ID:             pixKey.Id,
+			PixKeyType:     pixKey.PixKeyType,
+			PixKey:         pixKey.PixKey,
+			AccountType:    pixKey.AccountType,
+			AgencyNumber:   pixKey.AgencyNumber,
+			AccountNumber:  pixKey.AccountNumber,
+			HolderName:     pixKey.AccountHolderName,
+			HolderLastName: pixKey.AccountHolderLastName,
 		})
 	}
+
 	return response, nil
 }
 
 // PixKey is the resolver for the pixKey field.
 func (r *queryResolver) PixKey(ctx context.Context, id string) (*model.PixKey, error) {
-	findPixKeyByKeyDTO, err := r.FindPixKeyByKeyUsecase.Execute(&dto.FindPixKeyByKeyInputDTO{Key: id})
+	findPixKeyByKeyDTO, err := r.FindPixKeyByKeyUsecase.Execute(id)
 	if err != nil {
 		return nil, err
 	}
 	return &model.PixKey{
-		ID:         findPixKeyByKeyDTO.Id,
-		PixKeyType: findPixKeyByKeyDTO.PixKeyType,
-		PixKey:     findPixKeyByKeyDTO.PixKey,
-		Account: &model.Account{
-			AccountType: findPixKeyByKeyDTO.AccountType,
-			Number:      findPixKeyByKeyDTO.AccountNumber,
-			Agency:      findPixKeyByKeyDTO.AgencyNumber,
-			Holder: &model.Holder{
-				Name:     findPixKeyByKeyDTO.AccountHolderName,
-				LastName: &findPixKeyByKeyDTO.AccountHolderLastName,
-			},
-		},
+		ID:             findPixKeyByKeyDTO.Id,
+		PixKeyType:     findPixKeyByKeyDTO.PixKeyType,
+		PixKey:         findPixKeyByKeyDTO.PixKey,
+		AccountType:    findPixKeyByKeyDTO.AccountType,
+		AgencyNumber:   findPixKeyByKeyDTO.AgencyNumber,
+		AccountNumber:  findPixKeyByKeyDTO.AccountNumber,
+		HolderName:     findPixKeyByKeyDTO.AccountHolderName,
+		HolderLastName: findPixKeyByKeyDTO.AccountHolderLastName,
 	}, nil
-}
-
-// Account is the resolver for the account field.
-func (r *queryResolver) Account(ctx context.Context, id string) (*model.Account, error) {
-	panic(fmt.Errorf("not implemented: Account - account"))
-}
-
-// Holder is the resolver for the holder field.
-func (r *queryResolver) Holder(ctx context.Context, id string) (*model.Holder, error) {
-	panic(fmt.Errorf("not implemented: Holder - holder"))
 }
 
 // Mutation returns MutationResolver implementation.

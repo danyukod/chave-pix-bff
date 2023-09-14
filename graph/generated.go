@@ -45,18 +45,6 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
-	Account struct {
-		AccountType func(childComplexity int) int
-		Agency      func(childComplexity int) int
-		Holder      func(childComplexity int) int
-		Number      func(childComplexity int) int
-	}
-
-	Holder struct {
-		LastName func(childComplexity int) int
-		Name     func(childComplexity int) int
-	}
-
 	Mutation struct {
 		CreatePixKey func(childComplexity int, newPixKey model.NewPixKey) int
 		DeletePixKey func(childComplexity int, id string) int
@@ -64,15 +52,17 @@ type ComplexityRoot struct {
 	}
 
 	PixKey struct {
-		Account    func(childComplexity int) int
-		ID         func(childComplexity int) int
-		PixKey     func(childComplexity int) int
-		PixKeyType func(childComplexity int) int
+		AccountNumber  func(childComplexity int) int
+		AccountType    func(childComplexity int) int
+		AgencyNumber   func(childComplexity int) int
+		HolderLastName func(childComplexity int) int
+		HolderName     func(childComplexity int) int
+		ID             func(childComplexity int) int
+		PixKey         func(childComplexity int) int
+		PixKeyType     func(childComplexity int) int
 	}
 
 	Query struct {
-		Account func(childComplexity int, id string) int
-		Holder  func(childComplexity int, id string) int
 		PixKey  func(childComplexity int, id string) int
 		PixKeys func(childComplexity int) int
 	}
@@ -86,8 +76,6 @@ type MutationResolver interface {
 type QueryResolver interface {
 	PixKeys(ctx context.Context) ([]*model.PixKey, error)
 	PixKey(ctx context.Context, id string) (*model.PixKey, error)
-	Account(ctx context.Context, id string) (*model.Account, error)
-	Holder(ctx context.Context, id string) (*model.Holder, error)
 }
 
 type executableSchema struct {
@@ -104,48 +92,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
-
-	case "Account.accountType":
-		if e.complexity.Account.AccountType == nil {
-			break
-		}
-
-		return e.complexity.Account.AccountType(childComplexity), true
-
-	case "Account.agency":
-		if e.complexity.Account.Agency == nil {
-			break
-		}
-
-		return e.complexity.Account.Agency(childComplexity), true
-
-	case "Account.holder":
-		if e.complexity.Account.Holder == nil {
-			break
-		}
-
-		return e.complexity.Account.Holder(childComplexity), true
-
-	case "Account.number":
-		if e.complexity.Account.Number == nil {
-			break
-		}
-
-		return e.complexity.Account.Number(childComplexity), true
-
-	case "Holder.lastName":
-		if e.complexity.Holder.LastName == nil {
-			break
-		}
-
-		return e.complexity.Holder.LastName(childComplexity), true
-
-	case "Holder.name":
-		if e.complexity.Holder.Name == nil {
-			break
-		}
-
-		return e.complexity.Holder.Name(childComplexity), true
 
 	case "Mutation.createPixKey":
 		if e.complexity.Mutation.CreatePixKey == nil {
@@ -183,12 +129,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdatePixKey(childComplexity, args["id"].(string), args["newPixKey"].(model.NewPixKey)), true
 
-	case "PixKey.account":
-		if e.complexity.PixKey.Account == nil {
+	case "PixKey.accountNumber":
+		if e.complexity.PixKey.AccountNumber == nil {
 			break
 		}
 
-		return e.complexity.PixKey.Account(childComplexity), true
+		return e.complexity.PixKey.AccountNumber(childComplexity), true
+
+	case "PixKey.accountType":
+		if e.complexity.PixKey.AccountType == nil {
+			break
+		}
+
+		return e.complexity.PixKey.AccountType(childComplexity), true
+
+	case "PixKey.agencyNumber":
+		if e.complexity.PixKey.AgencyNumber == nil {
+			break
+		}
+
+		return e.complexity.PixKey.AgencyNumber(childComplexity), true
+
+	case "PixKey.holderLastName":
+		if e.complexity.PixKey.HolderLastName == nil {
+			break
+		}
+
+		return e.complexity.PixKey.HolderLastName(childComplexity), true
+
+	case "PixKey.holderName":
+		if e.complexity.PixKey.HolderName == nil {
+			break
+		}
+
+		return e.complexity.PixKey.HolderName(childComplexity), true
 
 	case "PixKey.id":
 		if e.complexity.PixKey.ID == nil {
@@ -210,30 +184,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PixKey.PixKeyType(childComplexity), true
-
-	case "Query.account":
-		if e.complexity.Query.Account == nil {
-			break
-		}
-
-		args, err := ec.field_Query_account_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Account(childComplexity, args["id"].(string)), true
-
-	case "Query.holder":
-		if e.complexity.Query.Holder == nil {
-			break
-		}
-
-		args, err := ec.field_Query_holder_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Holder(childComplexity, args["id"].(string)), true
 
 	case "Query.pixKey":
 		if e.complexity.Query.PixKey == nil {
@@ -448,36 +398,6 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_account_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_holder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["id"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["id"] = arg0
-	return args, nil
-}
-
 func (ec *executionContext) field_Query_pixKey_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -531,273 +451,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Account_accountType(ctx context.Context, field graphql.CollectedField, obj *model.Account) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Account_accountType(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccountType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Account_accountType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Account_number(ctx context.Context, field graphql.CollectedField, obj *model.Account) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Account_number(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Number, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Account_number(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Account_agency(ctx context.Context, field graphql.CollectedField, obj *model.Account) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Account_agency(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Agency, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Account_agency(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Account_holder(ctx context.Context, field graphql.CollectedField, obj *model.Account) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Account_holder(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Holder, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.Holder)
-	fc.Result = res
-	return ec.marshalNHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐHolder(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Account_holder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Account",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "name":
-				return ec.fieldContext_Holder_name(ctx, field)
-			case "lastName":
-				return ec.fieldContext_Holder_lastName(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Holder", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Holder_name(ctx context.Context, field graphql.CollectedField, obj *model.Holder) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Holder_name(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Holder_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Holder",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Holder_lastName(ctx context.Context, field graphql.CollectedField, obj *model.Holder) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Holder_lastName(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.LastName, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Holder_lastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Holder",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Mutation_createPixKey(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createPixKey(ctx, field)
 	if err != nil {
@@ -843,8 +496,16 @@ func (ec *executionContext) fieldContext_Mutation_createPixKey(ctx context.Conte
 				return ec.fieldContext_PixKey_pixKeyType(ctx, field)
 			case "pixKey":
 				return ec.fieldContext_PixKey_pixKey(ctx, field)
-			case "account":
-				return ec.fieldContext_PixKey_account(ctx, field)
+			case "accountType":
+				return ec.fieldContext_PixKey_accountType(ctx, field)
+			case "accountNumber":
+				return ec.fieldContext_PixKey_accountNumber(ctx, field)
+			case "agencyNumber":
+				return ec.fieldContext_PixKey_agencyNumber(ctx, field)
+			case "holderName":
+				return ec.fieldContext_PixKey_holderName(ctx, field)
+			case "holderLastName":
+				return ec.fieldContext_PixKey_holderLastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PixKey", field.Name)
 		},
@@ -908,8 +569,16 @@ func (ec *executionContext) fieldContext_Mutation_updatePixKey(ctx context.Conte
 				return ec.fieldContext_PixKey_pixKeyType(ctx, field)
 			case "pixKey":
 				return ec.fieldContext_PixKey_pixKey(ctx, field)
-			case "account":
-				return ec.fieldContext_PixKey_account(ctx, field)
+			case "accountType":
+				return ec.fieldContext_PixKey_accountType(ctx, field)
+			case "accountNumber":
+				return ec.fieldContext_PixKey_accountNumber(ctx, field)
+			case "agencyNumber":
+				return ec.fieldContext_PixKey_agencyNumber(ctx, field)
+			case "holderName":
+				return ec.fieldContext_PixKey_holderName(ctx, field)
+			case "holderLastName":
+				return ec.fieldContext_PixKey_holderLastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PixKey", field.Name)
 		},
@@ -973,8 +642,16 @@ func (ec *executionContext) fieldContext_Mutation_deletePixKey(ctx context.Conte
 				return ec.fieldContext_PixKey_pixKeyType(ctx, field)
 			case "pixKey":
 				return ec.fieldContext_PixKey_pixKey(ctx, field)
-			case "account":
-				return ec.fieldContext_PixKey_account(ctx, field)
+			case "accountType":
+				return ec.fieldContext_PixKey_accountType(ctx, field)
+			case "accountNumber":
+				return ec.fieldContext_PixKey_accountNumber(ctx, field)
+			case "agencyNumber":
+				return ec.fieldContext_PixKey_agencyNumber(ctx, field)
+			case "holderName":
+				return ec.fieldContext_PixKey_holderName(ctx, field)
+			case "holderLastName":
+				return ec.fieldContext_PixKey_holderLastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PixKey", field.Name)
 		},
@@ -1125,8 +802,8 @@ func (ec *executionContext) fieldContext_PixKey_pixKey(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _PixKey_account(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_PixKey_account(ctx, field)
+func (ec *executionContext) _PixKey_accountType(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PixKey_accountType(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1139,7 +816,7 @@ func (ec *executionContext) _PixKey_account(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Account, nil
+		return obj.AccountType, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1151,29 +828,192 @@ func (ec *executionContext) _PixKey_account(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Account)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐAccount(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_PixKey_account(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PixKey_accountType(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "PixKey",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "accountType":
-				return ec.fieldContext_Account_accountType(ctx, field)
-			case "number":
-				return ec.fieldContext_Account_number(ctx, field)
-			case "agency":
-				return ec.fieldContext_Account_agency(ctx, field)
-			case "holder":
-				return ec.fieldContext_Account_holder(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Account", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PixKey_accountNumber(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PixKey_accountNumber(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AccountNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PixKey_accountNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PixKey",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PixKey_agencyNumber(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PixKey_agencyNumber(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AgencyNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PixKey_agencyNumber(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PixKey",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PixKey_holderName(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PixKey_holderName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HolderName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PixKey_holderName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PixKey",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PixKey_holderLastName(ctx context.Context, field graphql.CollectedField, obj *model.PixKey) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PixKey_holderLastName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HolderLastName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PixKey_holderLastName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PixKey",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1224,8 +1064,16 @@ func (ec *executionContext) fieldContext_Query_pixKeys(ctx context.Context, fiel
 				return ec.fieldContext_PixKey_pixKeyType(ctx, field)
 			case "pixKey":
 				return ec.fieldContext_PixKey_pixKey(ctx, field)
-			case "account":
-				return ec.fieldContext_PixKey_account(ctx, field)
+			case "accountType":
+				return ec.fieldContext_PixKey_accountType(ctx, field)
+			case "accountNumber":
+				return ec.fieldContext_PixKey_accountNumber(ctx, field)
+			case "agencyNumber":
+				return ec.fieldContext_PixKey_agencyNumber(ctx, field)
+			case "holderName":
+				return ec.fieldContext_PixKey_holderName(ctx, field)
+			case "holderLastName":
+				return ec.fieldContext_PixKey_holderLastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PixKey", field.Name)
 		},
@@ -1275,8 +1123,16 @@ func (ec *executionContext) fieldContext_Query_pixKey(ctx context.Context, field
 				return ec.fieldContext_PixKey_pixKeyType(ctx, field)
 			case "pixKey":
 				return ec.fieldContext_PixKey_pixKey(ctx, field)
-			case "account":
-				return ec.fieldContext_PixKey_account(ctx, field)
+			case "accountType":
+				return ec.fieldContext_PixKey_accountType(ctx, field)
+			case "accountNumber":
+				return ec.fieldContext_PixKey_accountNumber(ctx, field)
+			case "agencyNumber":
+				return ec.fieldContext_PixKey_agencyNumber(ctx, field)
+			case "holderName":
+				return ec.fieldContext_PixKey_holderName(ctx, field)
+			case "holderLastName":
+				return ec.fieldContext_PixKey_holderLastName(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type PixKey", field.Name)
 		},
@@ -1289,126 +1145,6 @@ func (ec *executionContext) fieldContext_Query_pixKey(ctx context.Context, field
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_pixKey_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_account(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_account(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Account(rctx, fc.Args["id"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.Account)
-	fc.Result = res
-	return ec.marshalOAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐAccount(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_account(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "accountType":
-				return ec.fieldContext_Account_accountType(ctx, field)
-			case "number":
-				return ec.fieldContext_Account_number(ctx, field)
-			case "agency":
-				return ec.fieldContext_Account_agency(ctx, field)
-			case "holder":
-				return ec.fieldContext_Account_holder(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Account", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_account_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_holder(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_holder(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Holder(rctx, fc.Args["id"].(string))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*model.Holder)
-	fc.Result = res
-	return ec.marshalOHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐHolder(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_holder(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "name":
-				return ec.fieldContext_Holder_name(ctx, field)
-			case "lastName":
-				return ec.fieldContext_Holder_lastName(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Holder", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_holder_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3408,101 +3144,6 @@ func (ec *executionContext) unmarshalInputNewPixKey(ctx context.Context, obj int
 
 // region    **************************** object.gotpl ****************************
 
-var accountImplementors = []string{"Account"}
-
-func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, obj *model.Account) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, accountImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Account")
-		case "accountType":
-			out.Values[i] = ec._Account_accountType(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "number":
-			out.Values[i] = ec._Account_number(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "agency":
-			out.Values[i] = ec._Account_agency(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "holder":
-			out.Values[i] = ec._Account_holder(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
-var holderImplementors = []string{"Holder"}
-
-func (ec *executionContext) _Holder(ctx context.Context, sel ast.SelectionSet, obj *model.Holder) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, holderImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	deferred := make(map[string]*graphql.FieldSet)
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Holder")
-		case "name":
-			out.Values[i] = ec._Holder_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "lastName":
-			out.Values[i] = ec._Holder_lastName(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch(ctx)
-	if out.Invalids > 0 {
-		return graphql.Null
-	}
-
-	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
-
-	for label, dfs := range deferred {
-		ec.processDeferredGroup(graphql.DeferredGroup{
-			Label:    label,
-			Path:     graphql.GetPath(ctx),
-			FieldSet: dfs,
-			Context:  ctx,
-		})
-	}
-
-	return out
-}
-
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3592,11 +3233,28 @@ func (ec *executionContext) _PixKey(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "account":
-			out.Values[i] = ec._PixKey_account(ctx, field, obj)
+		case "accountType":
+			out.Values[i] = ec._PixKey_accountType(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "accountNumber":
+			out.Values[i] = ec._PixKey_accountNumber(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "agencyNumber":
+			out.Values[i] = ec._PixKey_agencyNumber(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "holderName":
+			out.Values[i] = ec._PixKey_holderName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "holderLastName":
+			out.Values[i] = ec._PixKey_holderLastName(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3671,44 +3329,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_pixKey(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "account":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_account(ctx, field)
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "holder":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_holder(ctx, field)
 				return res
 			}
 
@@ -4075,16 +3695,6 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐAccount(ctx context.Context, sel ast.SelectionSet, v *model.Account) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._Account(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4098,16 +3708,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐHolder(ctx context.Context, sel ast.SelectionSet, v *model.Holder) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._Holder(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
@@ -4471,13 +4071,6 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccount2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐAccount(ctx context.Context, sel ast.SelectionSet, v *model.Account) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Account(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4502,13 +4095,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOHolder2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐHolder(ctx context.Context, sel ast.SelectionSet, v *model.Holder) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Holder(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v *model.PixKey) graphql.Marshaler {
