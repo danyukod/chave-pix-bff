@@ -8,13 +8,13 @@ import (
 	"embed"
 	"errors"
 	"fmt"
-	"github.com/danyukod/chave-pix-bff/internal/ui/graph/model"
 	"strconv"
 	"sync"
 	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	"github.com/danyukod/chave-pix-bff/internal/ui/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -335,7 +335,7 @@ func (ec *executionContext) field_Mutation_createPixKey_args(ctx context.Context
 	var arg0 model.NewPixKey
 	if tmp, ok := rawArgs["newPixKey"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newPixKey"))
-		arg0, err = ec.unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewPixKey(ctx, tmp)
+		arg0, err = ec.unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐNewPixKey(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -374,7 +374,7 @@ func (ec *executionContext) field_Mutation_updatePixKey_args(ctx context.Context
 	var arg1 model.NewPixKey
 	if tmp, ok := rawArgs["newPixKey"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("newPixKey"))
-		arg1, err = ec.unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewPixKey(ctx, tmp)
+		arg1, err = ec.unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐNewPixKey(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -479,7 +479,7 @@ func (ec *executionContext) _Mutation_createPixKey(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.PixKey)
 	fc.Result = res
-	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
+	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createPixKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -552,7 +552,7 @@ func (ec *executionContext) _Mutation_updatePixKey(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.PixKey)
 	fc.Result = res
-	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
+	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updatePixKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -625,7 +625,7 @@ func (ec *executionContext) _Mutation_deletePixKey(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.PixKey)
 	fc.Result = res
-	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
+	return ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_deletePixKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1047,7 +1047,7 @@ func (ec *executionContext) _Query_pixKeys(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.PixKey)
 	fc.Result = res
-	return ec.marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKeyᚄ(ctx, field.Selections, res)
+	return ec.marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKeyᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_pixKeys(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1106,7 +1106,7 @@ func (ec *executionContext) _Query_pixKey(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.PixKey)
 	fc.Result = res
-	return ec.marshalOPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
+	return ec.marshalOPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_pixKey(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3740,16 +3740,16 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐNewPixKey(ctx context.Context, v interface{}) (model.NewPixKey, error) {
+func (ec *executionContext) unmarshalNNewPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐNewPixKey(ctx context.Context, v interface{}) (model.NewPixKey, error) {
 	res, err := ec.unmarshalInputNewPixKey(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v model.PixKey) graphql.Marshaler {
+func (ec *executionContext) marshalNPixKey2githubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v model.PixKey) graphql.Marshaler {
 	return ec._PixKey(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKeyᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PixKey) graphql.Marshaler {
+func (ec *executionContext) marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKeyᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PixKey) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -3773,7 +3773,7 @@ func (ec *executionContext) marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchave
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx, sel, v[i])
+			ret[i] = ec.marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3793,7 +3793,7 @@ func (ec *executionContext) marshalNPixKey2ᚕᚖgithubᚗcomᚋdanyukodᚋchave
 	return ret
 }
 
-func (ec *executionContext) marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v *model.PixKey) graphql.Marshaler {
+func (ec *executionContext) marshalNPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v *model.PixKey) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -4097,7 +4097,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v *model.PixKey) graphql.Marshaler {
+func (ec *executionContext) marshalOPixKey2ᚖgithubᚗcomᚋdanyukodᚋchaveᚑpixᚑbffᚋinternalᚋuiᚋgraphᚋmodelᚐPixKey(ctx context.Context, sel ast.SelectionSet, v *model.PixKey) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
